@@ -1,0 +1,164 @@
+---
+title: "Ajuste de Modelos para Casos de Poliomielite"
+format: 
+  html:
+    toc: true
+    code-fold: false
+---
+
+# Pré-Requisitos
+
+```{r pre_requisitos, results='hide', message=F, warning=F}
+library(glarma)
+library(tidyverse)
+library(performance)
+library(MASS)
+
+## Dados
+data(Polio)
+```
+
+# Variáveis
+
+```{r}
+glimpse(Polio)
+```
+
+- **Variável resposta:** `Cases`
+- **Variáveis preditoras:** `Intcpt`, `Trend`, `CosAnnual`, `SinAnnual`, `CosSemiAnnual`, `SinSemiAnnual`
+
+```{r variaveis}
+y <- Polio[, 2]
+X <- as.matrix(Polio[, 3:8])
+```
+
+# Ajuste do Modelo de Poisson
+
+## Ajuste do Modelo
+
+```{r modelo_poisson}
+glm_mod <- glm(y ~ X, family = poisson(link = "log"))
+```
+
+## Summary do Modelo
+
+```{r resumo_poisson}
+summary(glm_mod)
+```
+
+O modelo de Poisson revela que `XTrend`, `XSinAnnual` e `XSinSemiAnnual` têm efeitos significativos sobre o número de casos de poliomielite, enquanto `XCosAnnual` e `XCosSemiAnnual` não apresentam evidências suficientes de impacto. A análise indica que, embora o modelo de Poisson capture algumas das dinâmicas dos dados, a significância dos coeficientes e o AIC sugerem que ele pode não ser o modelo mais adequado, especialmente considerando que a variância pode ser maior que a média.
+
+## Análise dos Resíduos do Modelo
+
+### Diagnóstico dos Resíduos
+
+```{r diag_poisson}
+par(mfrow = c(2, 2))
+plot(glm_mod)
+```
+
+1. **Resíduos vs Ajustados (Residuals vs Fitted)**: 
+- Objetivo: Verificar se a variabilidade dos resíduos é aleatória em relação aos valores ajustados.
+- Interpretação: Se os resíduos mostram um padrão (como uma curva ou tendência), isso sugere que o modelo não está capturando todas as relações nos dados.
+- Observação: No gráfico, parece haver um leve padrão nos resíduos, sugerindo possível falta de ajuste.
+
+2.  **Gráfico Q-Q (Q-Q Plot)**:
+- Objetivo: Avaliar a normalidade dos resíduos.
+- Interpretação: Os resíduos devem seguir uma linha reta ao longo da diagonal. Desvios nos extremos indicam que a distribuição dos resíduos não é normal.
+- Observação: O gráfico mostra que os resíduos desviam da linha reta nos extremos, indicando que a distribuição dos resíduos pode não ser normal, o que é esperado em um modelo de Poisson.
+
+3.  **Escala-Localização (Scale-Location)**:
+- Objetivo: Verificar a homogeneidade da variância (homocedasticidade).
+- Interpretação: A linha vermelha deve ser aproximadamente horizontal, indicando que a variância dos resíduos é constante. Um padrão ascendente ou descendente indica heterocedasticidade.
+- Observação: Há um leve padrão ascendente, sugerindo heterocedasticidade (variância não constante).
+
+4.  **Resíduos vs Alavancagem (Residuals vs Leverage)**:
+- Objetivo: Identificar influências indevidas que podem afetar o modelo.
+- Interpretação: Pontos com resíduos grandes e alta alavancagem podem ser influentes e distorcer os resultados do modelo.
+- Observação: Há alguns pontos com alta alavancagem e resíduos grandes, o que pode indicar observações influentes.
+
+### Teste de Overdispersion
+
+```{r check_overdispersion_poisson}
+check_overdispersion(glm_mod)
+```
+
+A razão de dispersão de 1.980 e o p-valor < 0.001 indicam sobre-dispersão. Isso sugere que a variância dos dados é maior que a média, o que é uma condição comum em dados de contagem, reforçando a inadequação do modelo de Poisson.
+
+### Teste de Zero Inflation
+
+```{r check_zeroinflation_poisson}
+check_zeroinflation(glm_mod)
+```
+
+A razão de 0.83 sugere que o modelo não captura adequadamente o excesso de zeros nos dados. A presença de zeros inflacionados pode indicar que o modelo de Poisson não é o mais adequado, uma vez que ele não considera a estrutura de contagem de zeros.
+
+## Conclusão do Modelo de Poisson
+
+O modelo de Poisson apresenta falta de homogeneidade de variância, sobre-dispersão e inflação de zeros, tornando-o inadequado.
+
+---
+
+# Ajuste do Modelo Binomial Negativo
+
+## Ajuste do Modelo
+
+```{r ajuste_modelo_binomial_negativo, results='hide', message=F, warning=F}
+nb_mod <- glm.nb(y ~ X)
+```
+
+## Summary do Modelo
+
+```{r resumo_nb}
+summary(nb_mod)
+```
+
+O modelo binomial negativo apresenta coeficientes significativos para algumas variáveis, especialmente `XTrend`, `XSinAnnual` e `XSinSemiAnnual`, sugerindo uma relação importante entre essas variáveis e o número de casos de poliomielite. O modelo também lida bem com a sobre-dispersão nos dados, evidenciado pelo parâmetro theta e pelas deviance. No entanto, a falta de significância em outras variáveis indica que nem todos os fatores considerados têm um impacto claro nos casos observados.
+
+## Análise dos Resíduos do Modelo Binomial Negativo
+
+### Diagnóstico dos Resíduos
+
+```{r diag_nb}
+par(mfrow = c(2, 2))
+plot(nb_mod)
+```
+
+1. **Resíduos vs Ajustados (Residuals vs Fitted)**: 
+- Objetivo: Como no modelo de Poisson, verificar a aleatoriedade dos resíduos em relação aos valores ajustados.
+- Interpretação: Espera-se que os resíduos não apresentem padrões.
+- Observação: O gráfico apresenta padrões claros, sugerindo que o modelo binomial negativo não é necessariamente mais adequado do que o modelo de Poisson. A presença de padrões nos resíduos pode indicar que existem variáveis não capturadas pelo modelo ou uma estrutura não adequada para os dados.
+
+2.  **Gráfico Q-Q (Q-Q Plot)**:
+- Objetivo: Avaliar a normalidade dos resíduos.
+- Interpretação: Espera-se que os resíduos sigam a linha reta ao longo da diagonal.
+- Observação: Não houve melhoria significativa na distribuição dos resíduos em relação ao modelo de Poisson. Isso indica que a suposição de normalidade dos resíduos não é atendida, o que pode sugerir que os dados têm uma distribuição mais complexa do que o modelo pode capturar.
+
+3.  **Escala-Localização (Scale-Location)**:
+- Objetivo: Verificar a homogeneidade da variância.
+- Interpretação: A linha deve ser horizontal, indicando variância constante.
+- Observação: A linha é mais horizontal em comparação com o modelo de Poisson, o que sugere uma leve melhoria na homogeneidade da variância. Apesar disso, a presença de algum padrão ainda pode indicar que a variância não é completamente constante.
+
+4.  **Resíduos vs Alavancagem (Residuals vs Leverage)**:
+- Objetivo: Identificar pontos influentes.
+- Interpretação: Analisar se houve redução na quantidade de pontos influentes em relação ao modelo de Poisson.
+- Observação: Os pontos influentes 113 e 35 ainda estão presentes. Isso é uma preocupação, pois esses pontos podem estar exercendo uma influência desproporcional no modelo. É importante investigar as causas desses pontos para entender seu impacto na análise.
+
+### Teste de Overdispersion
+
+```{r check_overdispersion_nb}
+check_overdispersion(nb_mod)
+```
+A razão de dispersão próxima de 1 indica que a sobre-dispersão não é um problema significativo neste modelo, e o p-valor sugere que não há evidências suficientes para rejeitar a hipótese nula de que não há sobre-dispersão. Isso sugere que o modelo binomial negativo é adequado em relação a esse aspecto.
+
+
+### Teste de Zero Inflation
+
+```{r check_zeroinflation_nb}
+check_zeroinflation(nb_mod)
+```
+A razão de zeros observados para previstos está dentro da faixa de tolerância (p = 0.552). Isso indica que o modelo parece adequado em capturar a inflação de zeros presente nos dados. A proporção de zeros não é significativamente diferente, sugerindo que o modelo está lidando bem com essa característica dos dados.
+
+## Conclusão do Modelo Binomial Negativo
+
+A análise detalhada dos resíduos do modelo binomial negativo revelou algumas áreas de preocupação, como padrões nos resíduos e a presença de pontos influentes. Embora o modelo apresente uma leve melhoria em relação à homogeneidade da variância em comparação com o modelo de Poisson, não houve melhora significativa na normalidade dos resíduos. Os testes de sobre-dispersão e inflação de zeros sugerem que o modelo é aceitável em relação a esses aspectos, mas a presença de padrões nos resíduos e pontos influentes indica que o modelo pode não estar capturando completamente a estrutura dos dados.

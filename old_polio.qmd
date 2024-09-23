@@ -1,0 +1,166 @@
+---
+title: "polio"
+format: 
+  html:
+    toc: true
+    code-fold: true
+---
+
+## Pré Requisitos
+
+```{r pre requisitos}
+library(glarma)
+library(tidyverse)
+library(performance)
+
+## Dados
+data(Polio)
+```
+
+## Variáveis
+
+```{r}
+glimpse(Polio)
+```
+
+-   **Variável resposta:** `Cases`
+
+-   **Variáveis preditoras:** `Intcpt` + `Trend` + `CosAnnual` + `SinAnnual` + `CosSemiAnnual` + `SinSemiAnnual`
+
+```{r variaveis}
+y <- Polio[, 2]
+X <- as.matrix(Polio[, 3:8])
+```
+
+<!-- ## Ajuste Poisson -->
+
+```{r modelo}
+glm_mod <- glm(y ~ X, family = poisson(link = "log"))
+```
+
+### Summary
+
+```{r}
+summary(glm_mod)
+```
+
+A partir da análise do summary do modelo `glm_mod`, podemos observar:
+
+1.  **Tendência Negativa Significativa**: A variável `XTrend` mostra uma tendência negativa significativa ao longo do tempo nos casos de poliomielite.
+2.  **Padrão Sazonal Anual**: As variáveis `XSinAnnual` e `XCosSemiAnnual` indicam padrões sazonais significativos, sugerindo uma variação sazonal nos casos de poliomielite.
+
+### Análise dos resíduos do modelo
+
+São três diagnoses básicos dos GLMs, avaliando diferentes aspectos do modelo:
+
+1.  Homogeneidade da variância e normalidade dos resíduos.
+2.  Sobredispersão (*Overdispersion*)
+3.  Inflação de zeros (*Zero-inflation*)
+
+#### Homogeneidade da variância e normalidade dos resíduos
+
+```{r diag basica}
+par(mfrow = c(2, 2))
+plot(glm_mod)
+```
+
+Para avaliar se o modelo de Poisson é adequado para modelar esses dados com base nos gráficos de diagnóstico apresentados, podemos considerar os seguintes pontos:
+
+1.  **Resíduos vs Ajustados (Residuals vs Fitted)**:
+    -   A dispersão dos resíduos ao redor de zero deve ser aleatória, sem padrões claros.
+        -   No gráfico, parece haver um leve padrão nos resíduos, sugerindo possível falta de ajuste.
+2.  **Gráfico Q-Q (Q-Q Plot)**:
+    -   Os resíduos devem seguir uma linha reta ao longo da diagonal.
+        -   O gráfico mostra que os resíduos desviam da linha reta nos extremos, indicando que a distribuição dos resíduos pode não ser normal, o que é esperado em um modelo de Poisson.
+3.  **Escala-Localização (Scale-Location)**:
+    -   A linha vermelha deve ser aproximadamente horizontal, o que indicaria variância constante.
+        -   Há um leve padrão ascendente, sugerindo heterocedasticidade (variância não constante).
+4.  **Resíduos vs Alavancagem (Residuals vs Leverage)**:
+    -   Não deve haver pontos com resíduos grandes e alta alavancagem ao mesmo tempo.
+        -   Há alguns pontos com alta alavancagem e resíduos grandes, o que pode indicar observações influentes.
+
+Essas indicações sugerem que pode haver uma superdispersão (*overdispersion*) nos dados (variância maior que a média), o que é comum em dados de contagem.
+
+#### Overdispersion
+
+Usei a função [`check_overdisperion()`](https://easystats.github.io/performance/reference/check_overdispersion.html)  do pacote `perfomance` que utiliza uma distribuição chi-quadrado e o valor de *dispersion ratio* para testar a presença de *overdispersion* no modelo. O teste indica uma razão de dispersão de 1.980 (acima de 1 indica superdispersão) e um p-valor \< 0.001 (indica que o resultado é estatisticamente significativo). Isso indica que o modelo sobre de *overdispersion* e que devemos usar outra distribuição, tal como a distribuição **binomial negativa**, por exemplo.
+
+```{r overdisp}
+check_overdispersion(glm_mod)
+```
+
+#### Zero Inflation
+
+Usei a função [`check_zeroinflation()`](https://easystats.github.io/performance/reference/check_zeroinflation.html) no pacote `performanace` que lista as informações sobre a quantidade de zeros previstos e observados no resultado, bem como a razão entre esses dois valores. O teste indica uma razão de 0.83 (menor que 1 indica inflação de zeros). Isso sugere que o modelo atual não está capturando adequadamente o excesso de zeros presente nos dados.
+
+```{r zeroinflation}
+check_zeroinflation(glm_mod)
+```
+
+### Conclusão
+
+O modelo testado não tem homogeniedade de variancia e normalidade, possui sobre-dispersão e inflação de zeros. Isso tudo mostra que o modelo de Poisson *não é adequado.*
+
+
+
+## Ajuste Binomial Negativa
+
+Após a análise do modelo de Poisson, que apresentou problemas significativos como falta de homogeneidade de variância, sobre-dispersão e inflação de zeros, decidimos ajustar um modelo binomial negativo. Esse tipo de modelo é frequentemente utilizado em situações onde a variância dos dados é maior que a média, uma condição conhecida como sobre-dispersão.
+
+O modelo binomial negativo pode lidar melhor com a variabilidade excessiva nos dados de contagem e também pode capturar a presença de zeros inflacionados, tornando-o uma alternativa mais apropriada.
+
+### Ajuste do Modelo Binomial Negativo
+
+```{r ajuste modelo binomial negativa}
+library(MASS)
+
+# Ajustando o modelo binomial negativo
+nb_mod <- glm.nb(y ~ X)
+```
+
+### Resumo do Modelo
+
+Vamos verificar o resumo do modelo ajustado para entender como ele se comporta em relação às variáveis preditoras.
+
+```{r resumo modelo nb}
+summary(nb_mod)
+```
+
+### Análise dos Resíduos do Modelo Binomial Negativa
+
+Assim como fizemos anteriormente com o modelo de Poisson, agora vamos analisar os resíduos do modelo binomial negativo para verificar se ele apresenta melhorias em relação ao ajuste.
+
+```{r diag nb}
+par(mfrow = c(2, 2))
+plot(nb_mod)
+```
+
+#### Interpretação dos Gráficos de Diagnóstico
+
+1. **Resíduos vs Ajustados**: A dispersão dos resíduos deve estar aleatória, sem padrões evidentes, o que indicaria um bom ajuste do modelo.
+
+2. **Gráfico Q-Q**: Esperamos que os resíduos sigam uma linha reta ao longo da diagonal. Desvios significativos nos extremos indicariam problemas de ajuste.
+
+3. **Escala-Localização**: A linha vermelha deve ser horizontal, indicando variância constante. Qualquer padrão sugere heterocedasticidade.
+
+4. **Resíduos vs Alavancagem**: Devemos analisar se há pontos com resíduos grandes e alta alavancagem, que podem indicar influências indevidas no modelo.
+
+#### Overdispersion
+
+Usaremos novamente a função `check_overdispersion()` para avaliar a presença de sobre-dispersão no modelo binomial negativo.
+
+```{r check_overdispersion_nb}
+check_overdispersion(nb_mod)
+```
+
+#### Zero Inflation
+
+E para verificar a inflação de zeros, utilizaremos a função `check_zeroinflation()`.
+
+```{r check_zeroinflation_nb}
+check_zeroinflation(nb_mod)
+```
+
+### Conclusão
+
+Ao ajustar o modelo binomial negativo, esperamos resolver as limitações encontradas no modelo de Poisson. Se o modelo binomial negativo apresentar uma redução significativa na sobre-dispersão e na inflação de zeros, isso indicaria que ele é mais adequado para descrever os dados de casos de poliomielite. Continuaremos avaliando os resultados para assegurar que o modelo escolhido fornece as melhores inferências e previsões para nossos dados.
