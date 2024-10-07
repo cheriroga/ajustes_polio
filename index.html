@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -57,16 +57,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="polio_files/libs/clipboard/clipboard.min.js"></script>
-<script src="polio_files/libs/quarto-html/quarto.js"></script>
-<script src="polio_files/libs/quarto-html/popper.min.js"></script>
-<script src="polio_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="polio_files/libs/quarto-html/anchor.min.js"></script>
-<link href="polio_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="polio_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="polio_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="polio_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="polio_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -81,29 +81,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#pré-requisitos" id="toc-pré-requisitos" class="nav-link active" data-scroll-target="#pré-requisitos">Pré-Requisitos</a></li>
   <li><a href="#variáveis" id="toc-variáveis" class="nav-link" data-scroll-target="#variáveis">Variáveis</a></li>
-  <li><a href="#ajuste-do-modelo-de-poisson" id="toc-ajuste-do-modelo-de-poisson" class="nav-link" data-scroll-target="#ajuste-do-modelo-de-poisson">Ajuste do Modelo de Poisson</a>
+  <li><a href="#ajuste-do-modelo-glm-poisson" id="toc-ajuste-do-modelo-glm-poisson" class="nav-link" data-scroll-target="#ajuste-do-modelo-glm-poisson">Ajuste do Modelo GLM Poisson</a>
   <ul class="collapse">
   <li><a href="#ajuste-do-modelo" id="toc-ajuste-do-modelo" class="nav-link" data-scroll-target="#ajuste-do-modelo">Ajuste do Modelo</a></li>
   <li><a href="#summary-do-modelo" id="toc-summary-do-modelo" class="nav-link" data-scroll-target="#summary-do-modelo">Summary do Modelo</a></li>
   <li><a href="#análise-dos-resíduos-do-modelo" id="toc-análise-dos-resíduos-do-modelo" class="nav-link" data-scroll-target="#análise-dos-resíduos-do-modelo">Análise dos Resíduos do Modelo</a>
   <ul class="collapse">
+  <li><a href="#acf-autocorrelação-e-pacf-autocorrelação-parcial" id="toc-acf-autocorrelação-e-pacf-autocorrelação-parcial" class="nav-link" data-scroll-target="#acf-autocorrelação-e-pacf-autocorrelação-parcial">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</a></li>
   <li><a href="#diagnóstico-dos-resíduos" id="toc-diagnóstico-dos-resíduos" class="nav-link" data-scroll-target="#diagnóstico-dos-resíduos">Diagnóstico dos Resíduos</a></li>
-  <li><a href="#teste-de-overdispersion" id="toc-teste-de-overdispersion" class="nav-link" data-scroll-target="#teste-de-overdispersion">Teste de Overdispersion</a></li>
-  <li><a href="#teste-de-zero-inflation" id="toc-teste-de-zero-inflation" class="nav-link" data-scroll-target="#teste-de-zero-inflation">Teste de Zero Inflation</a></li>
+  <li><a href="#testes-de-overdispersion-e-zero-inflation" id="toc-testes-de-overdispersion-e-zero-inflation" class="nav-link" data-scroll-target="#testes-de-overdispersion-e-zero-inflation">Testes de Overdispersion e Zero Inflation</a></li>
   </ul></li>
-  <li><a href="#conclusão-do-modelo-de-poisson" id="toc-conclusão-do-modelo-de-poisson" class="nav-link" data-scroll-target="#conclusão-do-modelo-de-poisson">Conclusão do Modelo de Poisson</a></li>
+  <li><a href="#conclusão-do-modelo-glm-poisson" id="toc-conclusão-do-modelo-glm-poisson" class="nav-link" data-scroll-target="#conclusão-do-modelo-glm-poisson">Conclusão do Modelo GLM Poisson</a></li>
   </ul></li>
-  <li><a href="#ajuste-do-modelo-binomial-negativo" id="toc-ajuste-do-modelo-binomial-negativo" class="nav-link" data-scroll-target="#ajuste-do-modelo-binomial-negativo">Ajuste do Modelo Binomial Negativo</a>
+  <li><a href="#ajuste-do-modelo-glm-binomial-negativo" id="toc-ajuste-do-modelo-glm-binomial-negativo" class="nav-link" data-scroll-target="#ajuste-do-modelo-glm-binomial-negativo">Ajuste do Modelo GLM Binomial Negativo</a>
   <ul class="collapse">
   <li><a href="#ajuste-do-modelo-1" id="toc-ajuste-do-modelo-1" class="nav-link" data-scroll-target="#ajuste-do-modelo-1">Ajuste do Modelo</a></li>
   <li><a href="#summary-do-modelo-1" id="toc-summary-do-modelo-1" class="nav-link" data-scroll-target="#summary-do-modelo-1">Summary do Modelo</a></li>
   <li><a href="#análise-dos-resíduos-do-modelo-binomial-negativo" id="toc-análise-dos-resíduos-do-modelo-binomial-negativo" class="nav-link" data-scroll-target="#análise-dos-resíduos-do-modelo-binomial-negativo">Análise dos Resíduos do Modelo Binomial Negativo</a>
   <ul class="collapse">
+  <li><a href="#acf-autocorrelação-e-pacf-autocorrelação-parcial-1" id="toc-acf-autocorrelação-e-pacf-autocorrelação-parcial-1" class="nav-link" data-scroll-target="#acf-autocorrelação-e-pacf-autocorrelação-parcial-1">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</a></li>
   <li><a href="#diagnóstico-dos-resíduos-1" id="toc-diagnóstico-dos-resíduos-1" class="nav-link" data-scroll-target="#diagnóstico-dos-resíduos-1">Diagnóstico dos Resíduos</a></li>
-  <li><a href="#teste-de-overdispersion-1" id="toc-teste-de-overdispersion-1" class="nav-link" data-scroll-target="#teste-de-overdispersion-1">Teste de Overdispersion</a></li>
-  <li><a href="#teste-de-zero-inflation-1" id="toc-teste-de-zero-inflation-1" class="nav-link" data-scroll-target="#teste-de-zero-inflation-1">Teste de Zero Inflation</a></li>
+  <li><a href="#teste-de-overdispersion" id="toc-teste-de-overdispersion" class="nav-link" data-scroll-target="#teste-de-overdispersion">Teste de Overdispersion</a></li>
+  <li><a href="#teste-de-zero-inflation" id="toc-teste-de-zero-inflation" class="nav-link" data-scroll-target="#teste-de-zero-inflation">Teste de Zero Inflation</a></li>
   </ul></li>
-  <li><a href="#conclusão-do-modelo-binomial-negativo" id="toc-conclusão-do-modelo-binomial-negativo" class="nav-link" data-scroll-target="#conclusão-do-modelo-binomial-negativo">Conclusão do Modelo Binomial Negativo</a></li>
+  <li><a href="#conclusão-do-modelo-glm-binomial-negativo" id="toc-conclusão-do-modelo-glm-binomial-negativo" class="nav-link" data-scroll-target="#conclusão-do-modelo-glm-binomial-negativo">Conclusão do Modelo GLM Binomial Negativo</a></li>
+  </ul></li>
+  <li><a href="#ajuste-do-modelo-glarma-poisson" id="toc-ajuste-do-modelo-glarma-poisson" class="nav-link" data-scroll-target="#ajuste-do-modelo-glarma-poisson">Ajuste do Modelo GLARMA Poisson</a>
+  <ul class="collapse">
+  <li><a href="#summary-do-modelo-2" id="toc-summary-do-modelo-2" class="nav-link" data-scroll-target="#summary-do-modelo-2">Summary do Modelo</a></li>
+  <li><a href="#análise-dos-resíduos-do-modelo-1" id="toc-análise-dos-resíduos-do-modelo-1" class="nav-link" data-scroll-target="#análise-dos-resíduos-do-modelo-1">Análise dos Resíduos do Modelo</a>
+  <ul class="collapse">
+  <li><a href="#acf-autocorrelação-e-pacf-autocorrelação-parcial-2" id="toc-acf-autocorrelação-e-pacf-autocorrelação-parcial-2" class="nav-link" data-scroll-target="#acf-autocorrelação-e-pacf-autocorrelação-parcial-2">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</a></li>
+  <li><a href="#diagnóstico-dos-resíduos-2" id="toc-diagnóstico-dos-resíduos-2" class="nav-link" data-scroll-target="#diagnóstico-dos-resíduos-2">Diagnóstico dos Resíduos</a></li>
+  </ul></li>
+  <li><a href="#conclusão-do-modelo-glarma-poisson" id="toc-conclusão-do-modelo-glarma-poisson" class="nav-link" data-scroll-target="#conclusão-do-modelo-glarma-poisson">Conclusão do Modelo GLARMA Poisson</a></li>
+  </ul></li>
+  <li><a href="#ajuste-do-modelo-glarma-binomial-negativo" id="toc-ajuste-do-modelo-glarma-binomial-negativo" class="nav-link" data-scroll-target="#ajuste-do-modelo-glarma-binomial-negativo">Ajuste do Modelo GLARMA Binomial Negativo</a>
+  <ul class="collapse">
+  <li><a href="#summary-do-modelo-3" id="toc-summary-do-modelo-3" class="nav-link" data-scroll-target="#summary-do-modelo-3">Summary do Modelo</a></li>
+  <li><a href="#análise-dos-resíduos-do-modelo-2" id="toc-análise-dos-resíduos-do-modelo-2" class="nav-link" data-scroll-target="#análise-dos-resíduos-do-modelo-2">Análise dos Resíduos do Modelo</a>
+  <ul class="collapse">
+  <li><a href="#acf-autocorrelação-e-pacf-autocorrelação-parcial-3" id="toc-acf-autocorrelação-e-pacf-autocorrelação-parcial-3" class="nav-link" data-scroll-target="#acf-autocorrelação-e-pacf-autocorrelação-parcial-3">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</a></li>
+  <li><a href="#diagnóstico-dos-resíduos-3" id="toc-diagnóstico-dos-resíduos-3" class="nav-link" data-scroll-target="#diagnóstico-dos-resíduos-3">Diagnóstico dos Resíduos</a></li>
+  </ul></li>
+  <li><a href="#conclusão-do-modelo-glarma-binomial-negativo" id="toc-conclusão-do-modelo-glarma-binomial-negativo" class="nav-link" data-scroll-target="#conclusão-do-modelo-glarma-binomial-negativo">Conclusão do Modelo GLARMA Binomial Negativo</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -167,18 +188,18 @@ $ SinSemiAnnual &lt;dbl&gt; 2.939055e-15, 8.660254e-01, 8.660254e-01, -6.369308e
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(Polio[, <span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="ajuste-do-modelo-de-poisson" class="level1">
-<h1>Ajuste do Modelo de Poisson</h1>
+<section id="ajuste-do-modelo-glm-poisson" class="level1">
+<h1>Ajuste do Modelo GLM Poisson</h1>
 <section id="ajuste-do-modelo" class="level2">
 <h2 class="anchored" data-anchor-id="ajuste-do-modelo">Ajuste do Modelo</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>glm_mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> X, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>glm_poi <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> X, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="summary-do-modelo" class="level2">
 <h2 class="anchored" data-anchor-id="summary-do-modelo">Summary do Modelo</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -209,15 +230,31 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </section>
 <section id="análise-dos-resíduos-do-modelo" class="level2">
 <h2 class="anchored" data-anchor-id="análise-dos-resíduos-do-modelo">Análise dos Resíduos do Modelo</h2>
-<section id="diagnóstico-dos-resíduos" class="level3">
-<h3 class="anchored" data-anchor-id="diagnóstico-dos-resíduos">Diagnóstico dos Resíduos</h3>
+<section id="acf-autocorrelação-e-pacf-autocorrelação-parcial" class="level3">
+<h3 class="anchored" data-anchor-id="acf-autocorrelação-e-pacf-autocorrelação-parcial">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(glm_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(glm_poi<span class="sc">$</span>residuals)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(glm_poi<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="polio_files/figure-html/diag_poisson-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/acf_poisson-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Os gráficos de ACF e PACF mostram autocorrelação significativa no lag 1, sugerindo dependência temporal nos resíduos e a necessidade de ajustes no modelo.</p>
+</section>
+<section id="diagnóstico-dos-resíduos" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-dos-resíduos">Diagnóstico dos Resíduos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(glm_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/diag_poisson-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -255,10 +292,10 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <li>Observação: Há alguns pontos com alta alavancagem e resíduos grandes, o que pode indicar observações influentes.</li>
 </ul>
 </section>
-<section id="teste-de-overdispersion" class="level3">
-<h3 class="anchored" data-anchor-id="teste-de-overdispersion">Teste de Overdispersion</h3>
+<section id="testes-de-overdispersion-e-zero-inflation" class="level3">
+<h3 class="anchored" data-anchor-id="testes-de-overdispersion-e-zero-inflation">Testes de Overdispersion e Zero Inflation</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(glm_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(glm_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -271,11 +308,8 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 <p>A razão de dispersão de 1.980 e o p-valor &lt; 0.001 indicam sobre-dispersão. Isso sugere que a variância dos dados é maior que a média, o que é uma condição comum em dados de contagem, reforçando a inadequação do modelo de Poisson.</p>
-</section>
-<section id="teste-de-zero-inflation" class="level3">
-<h3 class="anchored" data-anchor-id="teste-de-zero-inflation">Teste de Zero Inflation</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_zeroinflation</span>(glm_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_zeroinflation</span>(glm_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Check for zero-inflation
 
@@ -290,24 +324,24 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <p>A razão de 0.83 sugere que o modelo não captura adequadamente o excesso de zeros nos dados. A presença de zeros inflacionados pode indicar que o modelo de Poisson não é o mais adequado, uma vez que ele não considera a estrutura de contagem de zeros.</p>
 </section>
 </section>
-<section id="conclusão-do-modelo-de-poisson" class="level2">
-<h2 class="anchored" data-anchor-id="conclusão-do-modelo-de-poisson">Conclusão do Modelo de Poisson</h2>
+<section id="conclusão-do-modelo-glm-poisson" class="level2">
+<h2 class="anchored" data-anchor-id="conclusão-do-modelo-glm-poisson">Conclusão do Modelo GLM Poisson</h2>
 <p>O modelo de Poisson apresenta falta de homogeneidade de variância, sobre-dispersão e inflação de zeros, tornando-o inadequado.</p>
 <hr>
 </section>
 </section>
-<section id="ajuste-do-modelo-binomial-negativo" class="level1">
-<h1>Ajuste do Modelo Binomial Negativo</h1>
+<section id="ajuste-do-modelo-glm-binomial-negativo" class="level1">
+<h1>Ajuste do Modelo GLM Binomial Negativo</h1>
 <section id="ajuste-do-modelo-1" class="level2">
 <h2 class="anchored" data-anchor-id="ajuste-do-modelo-1">Ajuste do Modelo</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nb_mod <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(y <span class="sc">~</span> X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>glm_nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(y <span class="sc">~</span> X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="summary-do-modelo-1" class="level2">
 <h2 class="anchored" data-anchor-id="summary-do-modelo-1">Summary do Modelo</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nb_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -343,15 +377,31 @@ Number of Fisher Scoring iterations: 1
 </section>
 <section id="análise-dos-resíduos-do-modelo-binomial-negativo" class="level2">
 <h2 class="anchored" data-anchor-id="análise-dos-resíduos-do-modelo-binomial-negativo">Análise dos Resíduos do Modelo Binomial Negativo</h2>
-<section id="diagnóstico-dos-resíduos-1" class="level3">
-<h3 class="anchored" data-anchor-id="diagnóstico-dos-resíduos-1">Diagnóstico dos Resíduos</h3>
+<section id="acf-autocorrelação-e-pacf-autocorrelação-parcial-1" class="level3">
+<h3 class="anchored" data-anchor-id="acf-autocorrelação-e-pacf-autocorrelação-parcial-1">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nb_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(glm_nb<span class="sc">$</span>residuals)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(glm_nb<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="polio_files/figure-html/diag_nb-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/acf_nb-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A ACF e PACF do modelo binomial negativo também revelam autocorrelação no lag 1, sugerindo que ajustes podem ser necessários.</p>
+</section>
+<section id="diagnóstico-dos-resíduos-1" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-dos-resíduos-1">Diagnóstico dos Resíduos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(glm_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/diag_nb-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -389,10 +439,10 @@ Number of Fisher Scoring iterations: 1
 <li>Observação: Os pontos influentes 113 e 35 ainda estão presentes. Isso é uma preocupação, pois esses pontos podem estar exercendo uma influência desproporcional no modelo. É importante investigar as causas desses pontos para entender seu impacto na análise.</li>
 </ul>
 </section>
-<section id="teste-de-overdispersion-1" class="level3">
-<h3 class="anchored" data-anchor-id="teste-de-overdispersion-1">Teste de Overdispersion</h3>
+<section id="teste-de-overdispersion" class="level3">
+<h3 class="anchored" data-anchor-id="teste-de-overdispersion">Teste de Overdispersion</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(nb_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(glm_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -405,10 +455,10 @@ Number of Fisher Scoring iterations: 1
 </div>
 <p>A razão de dispersão próxima de 1 indica que a sobre-dispersão não é um problema significativo neste modelo, e o p-valor sugere que não há evidências suficientes para rejeitar a hipótese nula de que não há sobre-dispersão. Isso sugere que o modelo binomial negativo é adequado em relação a esse aspecto.</p>
 </section>
-<section id="teste-de-zero-inflation-1" class="level3">
-<h3 class="anchored" data-anchor-id="teste-de-zero-inflation-1">Teste de Zero Inflation</h3>
+<section id="teste-de-zero-inflation" class="level3">
+<h3 class="anchored" data-anchor-id="teste-de-zero-inflation">Teste de Zero Inflation</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_zeroinflation</span>(nb_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_zeroinflation</span>(glm_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Check for zero-inflation
 
@@ -424,9 +474,209 @@ Number of Fisher Scoring iterations: 1
 <p>A razão de zeros observados para previstos está dentro da faixa de tolerância (p = 0.552). Isso indica que o modelo parece adequado em capturar a inflação de zeros presente nos dados. A proporção de zeros não é significativamente diferente, sugerindo que o modelo está lidando bem com essa característica dos dados.</p>
 </section>
 </section>
-<section id="conclusão-do-modelo-binomial-negativo" class="level2">
-<h2 class="anchored" data-anchor-id="conclusão-do-modelo-binomial-negativo">Conclusão do Modelo Binomial Negativo</h2>
+<section id="conclusão-do-modelo-glm-binomial-negativo" class="level2">
+<h2 class="anchored" data-anchor-id="conclusão-do-modelo-glm-binomial-negativo">Conclusão do Modelo GLM Binomial Negativo</h2>
 <p>A análise detalhada dos resíduos do modelo binomial negativo revelou algumas áreas de preocupação, como padrões nos resíduos e a presença de pontos influentes. Embora o modelo apresente uma leve melhoria em relação à homogeneidade da variância em comparação com o modelo de Poisson, não houve melhora significativa na normalidade dos resíduos. Os testes de sobre-dispersão e inflação de zeros sugerem que o modelo é aceitável em relação a esses aspectos, mas a presença de padrões nos resíduos e pontos influentes indica que o modelo pode não estar capturando completamente a estrutura dos dados.</p>
+<hr>
+</section>
+</section>
+<section id="ajuste-do-modelo-glarma-poisson" class="level1">
+<h1>Ajuste do Modelo GLARMA Poisson</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>glarma_poi <span class="ot">&lt;-</span> <span class="fu">glarma</span>(y, X, <span class="at">thetaLags =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">phiLags =</span> <span class="dv">5</span>, <span class="at">type =</span> <span class="st">"Poi"</span>,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"FS"</span>, <span class="at">residuals=</span> <span class="st">"Pearson"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">maxit =</span> <span class="dv">100</span>, <span class="at">grad =</span> <span class="fl">1e-6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dos modelos testados, esse apresentou o AIC mais baixo (536.2883), o que sugere que ele tem um melhor equilíbrio entre ajuste e complexidade em comparação com outros modelos.</p>
+<section id="summary-do-modelo-2" class="level2">
+<h2 class="anchored" data-anchor-id="summary-do-modelo-2">Summary do Modelo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glarma_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call: glarma(y = y, X = X, type = "Poi", method = "FS", residuals = "Pearson", 
+    phiLags = 5, thetaLags = c(1, 2), maxit = 100, grad = 1e-06)
+
+Pearson Residuals:
+    Min       1Q   Median       3Q      Max  
+-2.0456  -0.9401  -0.1482   0.7805   4.4827  
+
+GLARMA Coefficients:
+        Estimate Std.Error z-ratio Pr(&gt;|z|)    
+phi_5    0.10133   0.04734   2.141   0.0323 *  
+theta_1  0.21544   0.04753   4.532 5.83e-06 ***
+theta_2  0.11627   0.04895   2.375   0.0175 *  
+
+Linear Model Coefficients:
+              Estimate Std.Error z-ratio Pr(&gt;|z|)    
+Intcpt          0.1314    0.1150   1.143 0.253199    
+Trend          -3.9060    2.2095  -1.768 0.077090 .  
+CosAnnual      -0.1003    0.1126  -0.891 0.373115    
+SinAnnual      -0.5221    0.1323  -3.947  7.9e-05 ***
+CosSemiAnnual   0.2059    0.1141   1.805 0.071146 .  
+SinSemiAnnual  -0.3944    0.1185  -3.328 0.000874 ***
+
+    Null deviance: 343.00  on 167  degrees of freedom
+Residual deviance: 249.16  on 159  degrees of freedom
+AIC: 536.2883 
+
+Number of Fisher Scoring iterations: 20
+
+LRT and Wald Test:
+Alternative hypothesis: model is a GLARMA process
+Null hypothesis: model is a GLM with the same regression structure
+          Statistic  p-value    
+LR Test       27.61 4.39e-06 ***
+Wald Test     34.85 1.31e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Em geral, o modelo GLARMA ajusta-se bem aos dados, capturando a dependência temporal e apresentando coeficientes significativos para várias variáveis.</p>
+</section>
+<section id="análise-dos-resíduos-do-modelo-1" class="level2">
+<h2 class="anchored" data-anchor-id="análise-dos-resíduos-do-modelo-1">Análise dos Resíduos do Modelo</h2>
+<section id="acf-autocorrelação-e-pacf-autocorrelação-parcial-2" class="level3">
+<h3 class="anchored" data-anchor-id="acf-autocorrelação-e-pacf-autocorrelação-parcial-2">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(glm_poi<span class="sc">$</span>residuals)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(glm_poi<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/glarma_acf_poi-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A ACF e PACF do modelo poisson não revelam autocorrelações significativas, o que indica o modelo captura bem a dependencia temporal.</p>
+</section>
+<section id="diagnóstico-dos-resíduos-2" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-dos-resíduos-2">Diagnóstico dos Resíduos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(glarma_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/glarma_diag_poisson-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p><strong>Observed vs Fixed vs GLARMA:</strong> Esse gráfico compara os dados observados (linha preta) com os ajustes do modelo fixo (linha azul) e do GLARMA (linha vermelha). Como as três linhas estão bastante próximas, isso sugere que o modelo GLARMA captura bem a dinâmica dos dados observados.</p></li>
+<li><p><strong>Pearson Residuals:</strong> Resíduos de Pearson são as diferenças entre os valores observados e ajustados pelo modelo. O gráfico mostra resíduos sem padrões claros, mas há alguns desvios maiores que podem sugerir que o modelo não está ajustando perfeitamente em certas partes da série.</p></li>
+<li><p><strong>Histogram of Uniform PIT:</strong> Esse histograma deve ser aproximadamente uniforme para indicar um bom ajuste. Embora haja algum desvio em relação à linha de referência, ele é pequeno, o que indica que o modelo está adequadamente ajustado.</p></li>
+<li><p><strong>Histogram of Randomized Residuals:</strong> Aqui, espera-se uma distribuição simétrica em torno de zero e com formato próximo ao normal. Apesar de alguma assimetria, o gráfico ainda mostra uma forma que se aproxima de uma distribuição normal, sugerindo que o modelo está ajustado corretamente.</p></li>
+<li><p><strong>Q-Q Plot of Randomized Residuals:</strong> O gráfico quantil-quantil deve exibir pontos alinhados à linha pontilhada para indicar normalidade nos resíduos. Como não há desvios significativos, isso sugere que o modelo está ajustando bem.</p></li>
+<li><p><strong>ACF of Randomized Residuals:</strong> A ausência de autocorrelações significativas (barras fora da área pontilhada) indica que o modelo capturou bem a dependência temporal, reforçando a qualidade do ajuste.</p></li>
+</ol>
+</section>
+</section>
+<section id="conclusão-do-modelo-glarma-poisson" class="level2">
+<h2 class="anchored" data-anchor-id="conclusão-do-modelo-glarma-poisson">Conclusão do Modelo GLARMA Poisson</h2>
+<p>O modelo GLARMA Poisson ajustou-se bem aos dados, capturando a dependência temporal de forma eficiente. Os resíduos mostraram-se aleatórios e próximos de uma distribuição normal, com pequenos desvios não significativos. A ausência de autocorrelações nos resíduos confirma que o modelo capturou adequadamente as estruturas temporais presentes na série, indicando um bom ajuste geral para dados de contagem.</p>
+</section>
+</section>
+<section id="ajuste-do-modelo-glarma-binomial-negativo" class="level1">
+<h1>Ajuste do Modelo GLARMA Binomial Negativo</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>glarma_nb <span class="ot">&lt;-</span> <span class="fu">glarma</span>(y, X, <span class="at">thetaLags =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">type =</span> <span class="st">"NegBin"</span>,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"FS"</span>, <span class="at">residuals=</span> <span class="st">"Pearson"</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">maxit =</span> <span class="dv">100</span>, <span class="at">grad =</span> <span class="fl">1e-6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esse modelo foi o que apresentou menor AIC (514.1978), em comparação a outros modelos testados.</p>
+<section id="summary-do-modelo-3" class="level2">
+<h2 class="anchored" data-anchor-id="summary-do-modelo-3">Summary do Modelo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glarma_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call: glarma(y = y, X = X, type = "Poi", method = "FS", residuals = "Pearson", 
+    phiLags = 5, thetaLags = c(1, 2), maxit = 100, grad = 1e-06)
+
+Pearson Residuals:
+    Min       1Q   Median       3Q      Max  
+-2.0456  -0.9401  -0.1482   0.7805   4.4827  
+
+GLARMA Coefficients:
+        Estimate Std.Error z-ratio Pr(&gt;|z|)    
+phi_5    0.10133   0.04734   2.141   0.0323 *  
+theta_1  0.21544   0.04753   4.532 5.83e-06 ***
+theta_2  0.11627   0.04895   2.375   0.0175 *  
+
+Linear Model Coefficients:
+              Estimate Std.Error z-ratio Pr(&gt;|z|)    
+Intcpt          0.1314    0.1150   1.143 0.253199    
+Trend          -3.9060    2.2095  -1.768 0.077090 .  
+CosAnnual      -0.1003    0.1126  -0.891 0.373115    
+SinAnnual      -0.5221    0.1323  -3.947  7.9e-05 ***
+CosSemiAnnual   0.2059    0.1141   1.805 0.071146 .  
+SinSemiAnnual  -0.3944    0.1185  -3.328 0.000874 ***
+
+    Null deviance: 343.00  on 167  degrees of freedom
+Residual deviance: 249.16  on 159  degrees of freedom
+AIC: 536.2883 
+
+Number of Fisher Scoring iterations: 20
+
+LRT and Wald Test:
+Alternative hypothesis: model is a GLARMA process
+Null hypothesis: model is a GLM with the same regression structure
+          Statistic  p-value    
+LR Test       27.61 4.39e-06 ***
+Wald Test     34.85 1.31e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="análise-dos-resíduos-do-modelo-2" class="level2">
+<h2 class="anchored" data-anchor-id="análise-dos-resíduos-do-modelo-2">Análise dos Resíduos do Modelo</h2>
+<section id="acf-autocorrelação-e-pacf-autocorrelação-parcial-3" class="level3">
+<h3 class="anchored" data-anchor-id="acf-autocorrelação-e-pacf-autocorrelação-parcial-3">ACF (Autocorrelação) e PACF (Autocorrelação Parcial)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(glm_poi<span class="sc">$</span>residuals)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(glm_poi<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/glarma_acf_nb-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A ACF e PACF do modelo binomial negativo não revelam autocorrelações significativas, o que indica o modelo captura bem a dependencia temporal.</p>
+</section>
+<section id="diagnóstico-dos-resíduos-3" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-dos-resíduos-3">Diagnóstico dos Resíduos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(glarma_poi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/glarma_diag_nb-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p><strong>Observed vs Fixed vs GLARMA:</strong> As três linhas estão próximas, como no modelo Poisson, indicando um bom ajuste.</p></li>
+<li><p><strong>Pearson Residuals:</strong> Os resíduos mostram-se sem padrões claros, com alguns desvios maiores, assim como no modelo anterior.</p></li>
+<li><p><strong>Histogram of Uniform PIT:</strong> O desvio da uniformidade é menor em comparação ao modelo Poisson, sugerindo um ajuste mais preciso.</p></li>
+<li><p><strong>Histogram of Randomized Residuals:</strong> A distribuição dos resíduos se aproxima da normal, com menor desvio que no modelo Poisson.</p></li>
+<li><p><strong>Q-Q Plot of Randomized Residuals:</strong> Os pontos no gráfico seguem a linha pontilhada, confirmando a normalidade dos resíduos.</p></li>
+<li><p><strong>ACF of Randomized Residuals:</strong> A ausência de autocorrelações reforça o bom ajuste.</p></li>
+</ol>
+</section>
+</section>
+<section id="conclusão-do-modelo-glarma-binomial-negativo" class="level2">
+<h2 class="anchored" data-anchor-id="conclusão-do-modelo-glarma-binomial-negativo">Conclusão do Modelo GLARMA Binomial Negativo</h2>
+<p>O GLARMA Binomial Negativo apresenta um ajuste melhor que o Poisson, conforme o AIC mais baixo, com resíduos mais próximos da normalidade e melhor captura da dependência temporal.</p>
 </section>
 </section>
 
@@ -467,18 +717,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -510,7 +749,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -518,7 +779,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

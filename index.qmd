@@ -32,29 +32,37 @@ y <- Polio[, 2]
 X <- as.matrix(Polio[, 3:8])
 ```
 
-# Ajuste do Modelo de Poisson
+# Ajuste do Modelo GLM Poisson
 
 ## Ajuste do Modelo
 
 ```{r modelo_poisson}
-glm_mod <- glm(y ~ X, family = poisson(link = "log"))
+glm_poi <- glm(y ~ X, family = poisson(link = "log"))
 ```
 
 ## Summary do Modelo
 
 ```{r resumo_poisson}
-summary(glm_mod)
+summary(glm_poi)
 ```
 
 O modelo de Poisson revela que `XTrend`, `XSinAnnual` e `XSinSemiAnnual` têm efeitos significativos sobre o número de casos de poliomielite, enquanto `XCosAnnual` e `XCosSemiAnnual` não apresentam evidências suficientes de impacto. A análise indica que, embora o modelo de Poisson capture algumas das dinâmicas dos dados, a significância dos coeficientes e o AIC sugerem que ele pode não ser o modelo mais adequado, especialmente considerando que a variância pode ser maior que a média.
 
 ## Análise dos Resíduos do Modelo
 
+### ACF (Autocorrelação) e PACF (Autocorrelação Parcial)
+```{r acf_poisson}
+par(mfrow = c(2, 1))
+acf(glm_poi$residuals)
+pacf(glm_poi$residuals)
+```
+Os gráficos de ACF e PACF mostram autocorrelação significativa no lag 1, sugerindo dependência temporal nos resíduos e a necessidade de ajustes no modelo.
+
 ### Diagnóstico dos Resíduos
 
 ```{r diag_poisson}
 par(mfrow = c(2, 2))
-plot(glm_mod)
+plot(glm_poi)
 ```
 
 1. **Resíduos vs Ajustados (Residuals vs Fitted)**: 
@@ -77,51 +85,57 @@ plot(glm_mod)
 - Interpretação: Pontos com resíduos grandes e alta alavancagem podem ser influentes e distorcer os resultados do modelo.
 - Observação: Há alguns pontos com alta alavancagem e resíduos grandes, o que pode indicar observações influentes.
 
-### Teste de Overdispersion
+
+### Testes de Overdispersion e Zero Inflation
 
 ```{r check_overdispersion_poisson}
-check_overdispersion(glm_mod)
+check_overdispersion(glm_poi)
 ```
-
 A razão de dispersão de 1.980 e o p-valor < 0.001 indicam sobre-dispersão. Isso sugere que a variância dos dados é maior que a média, o que é uma condição comum em dados de contagem, reforçando a inadequação do modelo de Poisson.
 
-### Teste de Zero Inflation
-
 ```{r check_zeroinflation_poisson}
-check_zeroinflation(glm_mod)
+check_zeroinflation(glm_poi)
 ```
 
 A razão de 0.83 sugere que o modelo não captura adequadamente o excesso de zeros nos dados. A presença de zeros inflacionados pode indicar que o modelo de Poisson não é o mais adequado, uma vez que ele não considera a estrutura de contagem de zeros.
 
-## Conclusão do Modelo de Poisson
+## Conclusão do Modelo GLM Poisson
 
 O modelo de Poisson apresenta falta de homogeneidade de variância, sobre-dispersão e inflação de zeros, tornando-o inadequado.
 
 ---
 
-# Ajuste do Modelo Binomial Negativo
+# Ajuste do Modelo GLM Binomial Negativo
 
 ## Ajuste do Modelo
 
 ```{r ajuste_modelo_binomial_negativo, results='hide', message=F, warning=F}
-nb_mod <- glm.nb(y ~ X)
+glm_nb <- glm.nb(y ~ X)
 ```
 
 ## Summary do Modelo
 
 ```{r resumo_nb}
-summary(nb_mod)
+summary(glm_nb)
 ```
 
 O modelo binomial negativo apresenta coeficientes significativos para algumas variáveis, especialmente `XTrend`, `XSinAnnual` e `XSinSemiAnnual`, sugerindo uma relação importante entre essas variáveis e o número de casos de poliomielite. O modelo também lida bem com a sobre-dispersão nos dados, evidenciado pelo parâmetro theta e pelas deviance. No entanto, a falta de significância em outras variáveis indica que nem todos os fatores considerados têm um impacto claro nos casos observados.
 
 ## Análise dos Resíduos do Modelo Binomial Negativo
 
+### ACF (Autocorrelação) e PACF (Autocorrelação Parcial)
+```{r acf_nb}
+par(mfrow = c(2, 1))
+acf(glm_nb$residuals)
+pacf(glm_nb$residuals)
+```
+A ACF e PACF do modelo binomial negativo também revelam autocorrelação no lag 1, sugerindo que ajustes podem ser necessários.
+
 ### Diagnóstico dos Resíduos
 
 ```{r diag_nb}
 par(mfrow = c(2, 2))
-plot(nb_mod)
+plot(glm_nb)
 ```
 
 1. **Resíduos vs Ajustados (Residuals vs Fitted)**: 
@@ -147,7 +161,7 @@ plot(nb_mod)
 ### Teste de Overdispersion
 
 ```{r check_overdispersion_nb}
-check_overdispersion(nb_mod)
+check_overdispersion(glm_nb)
 ```
 A razão de dispersão próxima de 1 indica que a sobre-dispersão não é um problema significativo neste modelo, e o p-valor sugere que não há evidências suficientes para rejeitar a hipótese nula de que não há sobre-dispersão. Isso sugere que o modelo binomial negativo é adequado em relação a esse aspecto.
 
@@ -155,10 +169,111 @@ A razão de dispersão próxima de 1 indica que a sobre-dispersão não é um pr
 ### Teste de Zero Inflation
 
 ```{r check_zeroinflation_nb}
-check_zeroinflation(nb_mod)
+check_zeroinflation(glm_nb)
 ```
 A razão de zeros observados para previstos está dentro da faixa de tolerância (p = 0.552). Isso indica que o modelo parece adequado em capturar a inflação de zeros presente nos dados. A proporção de zeros não é significativamente diferente, sugerindo que o modelo está lidando bem com essa característica dos dados.
 
-## Conclusão do Modelo Binomial Negativo
+## Conclusão do Modelo GLM Binomial Negativo
 
 A análise detalhada dos resíduos do modelo binomial negativo revelou algumas áreas de preocupação, como padrões nos resíduos e a presença de pontos influentes. Embora o modelo apresente uma leve melhoria em relação à homogeneidade da variância em comparação com o modelo de Poisson, não houve melhora significativa na normalidade dos resíduos. Os testes de sobre-dispersão e inflação de zeros sugerem que o modelo é aceitável em relação a esses aspectos, mas a presença de padrões nos resíduos e pontos influentes indica que o modelo pode não estar capturando completamente a estrutura dos dados.
+
+---
+
+# Ajuste do Modelo GLARMA Poisson
+
+```{r glarma_poi}
+glarma_poi <- glarma(y, X, thetaLags = c(1,2), phiLags = 5, type = "Poi",
+                       method = "FS", residuals= "Pearson",
+                       maxit = 100, grad = 1e-6)
+```
+
+Dos modelos testados, esse apresentou o AIC mais baixo (536.2883), o que sugere que ele tem um melhor equilíbrio entre ajuste e complexidade em comparação com outros modelos.
+
+## Summary do Modelo
+
+```{r summary_glarma_poi}
+summary(glarma_poi)
+```
+
+Em geral, o modelo GLARMA ajusta-se bem aos dados, capturando a dependência temporal e apresentando coeficientes significativos para várias variáveis.
+  
+## Análise dos Resíduos do Modelo
+
+### ACF (Autocorrelação) e PACF (Autocorrelação Parcial)
+
+```{r glarma_acf_poi}
+par(mfrow = c(2, 1))
+acf(glm_poi$residuals)
+pacf(glm_poi$residuals)
+```
+A ACF e PACF do modelo poisson não revelam autocorrelações significativas, o que indica o modelo captura bem a dependencia temporal.
+
+### Diagnóstico dos Resíduos
+
+```{r glarma_diag_poisson}
+par(mfrow=c(2,3))
+plot(glarma_poi)
+```
+
+1. **Observed vs Fixed vs GLARMA:** Esse gráfico compara os dados observados (linha preta) com os ajustes do modelo fixo (linha azul) e do GLARMA (linha vermelha). Como as três linhas estão bastante próximas, isso sugere que o modelo GLARMA captura bem a dinâmica dos dados observados.
+
+2. **Pearson Residuals:** Resíduos de Pearson são as diferenças entre os valores observados e ajustados pelo modelo. O gráfico mostra resíduos sem padrões claros, mas há alguns desvios maiores que podem sugerir que o modelo não está ajustando perfeitamente em certas partes da série.
+
+3. **Histogram of Uniform PIT:** Esse histograma deve ser aproximadamente uniforme para indicar um bom ajuste. Embora haja algum desvio em relação à linha de referência, ele é pequeno, o que indica que o modelo está adequadamente ajustado.
+
+4. **Histogram of Randomized Residuals:** Aqui, espera-se uma distribuição simétrica em torno de zero e com formato próximo ao normal. Apesar de alguma assimetria, o gráfico ainda mostra uma forma que se aproxima de uma distribuição normal, sugerindo que o modelo está ajustado corretamente.
+
+5. **Q-Q Plot of Randomized Residuals:** O gráfico quantil-quantil deve exibir pontos alinhados à linha pontilhada para indicar normalidade nos resíduos. Como não há desvios significativos, isso sugere que o modelo está ajustando bem.
+
+6. **ACF of Randomized Residuals:** A ausência de autocorrelações significativas (barras fora da área pontilhada) indica que o modelo capturou bem a dependência temporal, reforçando a qualidade do ajuste.
+
+## Conclusão do Modelo GLARMA Poisson
+
+O modelo GLARMA Poisson ajustou-se bem aos dados, capturando a dependência temporal de forma eficiente. Os resíduos mostraram-se aleatórios e próximos de uma distribuição normal, com pequenos desvios não significativos. A ausência de autocorrelações nos resíduos confirma que o modelo capturou adequadamente as estruturas temporais presentes na série, indicando um bom ajuste geral para dados de contagem.
+
+# Ajuste do Modelo GLARMA Binomial Negativo
+```{r glarma_nb}
+glarma_nb <- glarma(y, X, thetaLags = c(1,2,4), type = "NegBin",
+                       method = "FS", residuals= "Pearson",
+                       maxit = 100, grad = 1e-6)
+```
+Esse modelo foi o que apresentou menor AIC (514.1978), em comparação a outros modelos testados.
+
+## Summary do Modelo
+```{r summary_glarma_nb}
+summary(glarma_poi)
+```
+
+## Análise dos Resíduos do Modelo
+
+### ACF (Autocorrelação) e PACF (Autocorrelação Parcial)
+
+```{r glarma_acf_nb}
+par(mfrow = c(2, 1))
+acf(glm_poi$residuals)
+pacf(glm_poi$residuals)
+```
+A ACF e PACF do modelo binomial negativo não revelam autocorrelações significativas, o que indica o modelo captura bem a dependencia temporal.
+
+### Diagnóstico dos Resíduos
+
+```{r glarma_diag_nb}
+par(mfrow=c(2,3))
+plot(glarma_poi)
+```
+
+1. **Observed vs Fixed vs GLARMA:** As três linhas estão próximas, como no modelo Poisson, indicando um bom ajuste.
+
+2. **Pearson Residuals:** Os resíduos mostram-se sem padrões claros, com alguns desvios maiores, assim como no modelo anterior.
+
+3. **Histogram of Uniform PIT:** O desvio da uniformidade é menor em comparação ao modelo Poisson, sugerindo um ajuste mais preciso.
+
+4. **Histogram of Randomized Residuals:** A distribuição dos resíduos se aproxima da normal, com menor desvio que no modelo Poisson.
+
+5. **Q-Q Plot of Randomized Residuals:** Os pontos no gráfico seguem a linha pontilhada, confirmando a normalidade dos resíduos.
+
+6. **ACF of Randomized Residuals:** A ausência de autocorrelações reforça o bom ajuste.
+
+## Conclusão do Modelo GLARMA Binomial Negativo
+
+O GLARMA Binomial Negativo apresenta um ajuste melhor que o Poisson, conforme o AIC mais baixo, com resíduos mais próximos da normalidade e melhor captura da dependência temporal.
