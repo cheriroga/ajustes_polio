@@ -203,8 +203,8 @@ Em geral, o modelo GLARMA ajusta-se bem aos dados, capturando a dependência tem
 
 ```{r glarma_acf_poi}
 par(mfrow = c(2, 1))
-acf(glm_poi$residuals)
-pacf(glm_poi$residuals)
+acf(glarma_poi$residuals)
+pacf(glarma_poi$residuals)
 ```
 A ACF e PACF do modelo poisson não revelam autocorrelações significativas, o que indica o modelo captura bem a dependencia temporal.
 
