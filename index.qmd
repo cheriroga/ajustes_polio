@@ -215,25 +215,26 @@ par(mfrow=c(2,3))
 plot(glarma_poi)
 ```
 
-1. **Observed vs Fixed vs GLARMA:** Esse gráfico compara os dados observados (linha preta) com os ajustes do modelo fixo (linha azul) e do GLARMA (linha vermelha). Como as três linhas estão bastante próximas, isso sugere que o modelo GLARMA captura bem a dinâmica dos dados observados.
+1. **Observed vs Fixed vs GLARMA:** Esse gráfico compara os dados observados (linha preta) com os ajustes do modelo fixo (linha azul) e do GLARMA (linha vermelha). A linha do GLARMA acompanha bem a dos dados obserados, porém os ajustes do modelo fixo não segue tão bem.
 
-2. **Pearson Residuals:** Resíduos de Pearson são as diferenças entre os valores observados e ajustados pelo modelo. O gráfico mostra resíduos sem padrões claros, mas há alguns desvios maiores que podem sugerir que o modelo não está ajustando perfeitamente em certas partes da série.
+2. **Pearson Residuals:** Resíduos de Pearson são as diferenças entre os valores observados e o valores esperados, ajustando-se pelas variações esperadas. O gráfico mostra resíduos sem padrões claros ou desvios maiores, o que sugere um modelo possivelmente adequado.
 
-3. **Histogram of Uniform PIT:** Esse histograma deve ser aproximadamente uniforme para indicar um bom ajuste. Embora haja algum desvio em relação à linha de referência, ele é pequeno, o que indica que o modelo está adequadamente ajustado.
+3. **Histogram of Uniform PIT:** Esse histograma deve ser aproximadamente uniforme para indicar um bom ajuste. Há um desvio em relação à linha de referência, o que indica que o modelo não está adequadamente ajustado.
 
-4. **Histogram of Randomized Residuals:** Aqui, espera-se uma distribuição simétrica em torno de zero e com formato próximo ao normal. Apesar de alguma assimetria, o gráfico ainda mostra uma forma que se aproxima de uma distribuição normal, sugerindo que o modelo está ajustado corretamente.
+4. **Histogram of Randomized Residuals:** Aqui, espera-se uma distribuição simétrica em torno de zero e com formato próximo ao normal. O gráfico apresenta assimetria e não se aproxima de uma distribuição normal, sugerindo que o modelo não está ajustado corretamente.
 
-5. **Q-Q Plot of Randomized Residuals:** O gráfico quantil-quantil deve exibir pontos alinhados à linha pontilhada para indicar normalidade nos resíduos. Como não há desvios significativos, isso sugere que o modelo está ajustando bem.
+5. **Q-Q Plot of Randomized Residuals:** O gráfico quantil-quantil deve exibir pontos alinhados à linha pontilhada para indicar normalidade nos resíduos. Os pontos se apresentam relativamente proximos a linha porém há desvios nas extremidades.
 
 6. **ACF of Randomized Residuals:** A ausência de autocorrelações significativas (barras fora da área pontilhada) indica que o modelo capturou bem a dependência temporal, reforçando a qualidade do ajuste.
 
 ## Conclusão do Modelo GLARMA Poisson
 
-O modelo GLARMA Poisson ajustou-se bem aos dados, capturando a dependência temporal de forma eficiente. Os resíduos mostraram-se aleatórios e próximos de uma distribuição normal, com pequenos desvios não significativos. A ausência de autocorrelações nos resíduos confirma que o modelo capturou adequadamente as estruturas temporais presentes na série, indicando um bom ajuste geral para dados de contagem.
+O modelo GLARMA Poisson capturou bem a dependência temporal dos dados, apresentando coeficientes significativos e o menor AIC entre os modelos testados. Embora a análise dos resíduos indique um ajuste geral adequado, alguns gráficos sugerem falhas na adequação da distribuição dos resíduos. No entanto, o modelo ainda oferece um bom equilíbrio entre ajuste e complexidade, sendo uma escolha sólida para a série analisada.
+
 
 # Ajuste do Modelo GLARMA Binomial Negativo
 ```{r glarma_nb}
-glarma_nb <- glarma(y, X, thetaLags = c(1,2,4), type = "NegBin",
+glarma_nb <- glarma(y, X, thetaLags = c(1,2), phiLags = 4, type = "NegBin",
                        method = "FS", residuals= "Pearson",
                        maxit = 100, grad = 1e-6)
 ```
@@ -241,7 +242,7 @@ Esse modelo foi o que apresentou menor AIC (514.1978), em comparação a outros 
 
 ## Summary do Modelo
 ```{r summary_glarma_nb}
-summary(glarma_poi)
+summary(glarma_nb)
 ```
 
 ## Análise dos Resíduos do Modelo
@@ -250,8 +251,8 @@ summary(glarma_poi)
 
 ```{r glarma_acf_nb}
 par(mfrow = c(2, 1))
-acf(glm_poi$residuals)
-pacf(glm_poi$residuals)
+acf(glarma_nb$residuals)
+pacf(glarma_nb$residuals)
 ```
 A ACF e PACF do modelo binomial negativo não revelam autocorrelações significativas, o que indica o modelo captura bem a dependencia temporal.
 
@@ -259,21 +260,21 @@ A ACF e PACF do modelo binomial negativo não revelam autocorrelações signific
 
 ```{r glarma_diag_nb}
 par(mfrow=c(2,3))
-plot(glarma_poi)
+plot(glarma_nb)
 ```
 
-1. **Observed vs Fixed vs GLARMA:** As três linhas estão próximas, como no modelo Poisson, indicando um bom ajuste.
+1. **Observed vs Fixed vs GLARMA:** Assim como no modelo poisson, a linha vermelha está mais proxima da preta do que a linha azul.
 
-2. **Pearson Residuals:** Os resíduos mostram-se sem padrões claros, com alguns desvios maiores, assim como no modelo anterior.
+2. **Pearson Residuals:** Os resíduos mostram-se sem padrões claros ou desvios maiores, assim como no modelo anterior.
 
-3. **Histogram of Uniform PIT:** O desvio da uniformidade é menor em comparação ao modelo Poisson, sugerindo um ajuste mais preciso.
+3. **Histogram of Uniform PIT:** O desvio da uniformidade ainda persiste, sugerindo imprecisão no modelo.
 
-4. **Histogram of Randomized Residuals:** A distribuição dos resíduos se aproxima da normal, com menor desvio que no modelo Poisson.
+4. **Histogram of Randomized Residuals:** Diferentimente do modelo poisson, a distribuição dos resíduos se aproxima da normal, com menor assimetria.
 
-5. **Q-Q Plot of Randomized Residuals:** Os pontos no gráfico seguem a linha pontilhada, confirmando a normalidade dos resíduos.
+5. **Q-Q Plot of Randomized Residuals:** Os pontos no gráfico seguem a linha pontilhada, porém como no modelo poisson, há desvios nas extremidades.
 
 6. **ACF of Randomized Residuals:** A ausência de autocorrelações reforça o bom ajuste.
 
 ## Conclusão do Modelo GLARMA Binomial Negativo
 
-O GLARMA Binomial Negativo apresenta um ajuste melhor que o Poisson, conforme o AIC mais baixo, com resíduos mais próximos da normalidade e melhor captura da dependência temporal.
+O GLARMA Binomial Negativo apresenta um ajuste melhor que o Poisson, conforme o AIC mais baixo, com resíduos mais próximos da normalidade e melhor captura da dependência temporal. 
